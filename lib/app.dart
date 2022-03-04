@@ -1,14 +1,27 @@
+import 'package:fictional_spork/features/features.dart';
+import 'package:fictional_spork/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'core/core.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('data'),
+    return MaterialApp(
+      initialRoute: HomePage.routeName,
+      routes: Routes.generateRoutes,
+      theme: ThemeData.light().copyWith(
+        backgroundColor: AppColors.backgroundColor,
+        colorScheme: const ColorScheme.light(primary: AppColors.primaryColor),
+        primaryColor: AppColors.primaryColor,
+        primaryColorDark: AppColors.primaryColorDark,
+        primaryColorLight: AppColors.primaryColorLight,
+        textTheme: GoogleFonts.robotoTextTheme(),
       ),
+      title: 'Fictional Spork',
     );
   }
 }
