@@ -1,4 +1,5 @@
 import 'package:fictional_spork/core/presentation/widgets/widgets.dart';
+import 'package:fictional_spork/features/auth/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,7 +11,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(),
-      backgroundColor: Theme.of(context).backgroundColor,
       body: _buildBody(context),
     );
   }
@@ -32,7 +32,9 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(LoginPage.routeName);
+                },
                 child: const Text('Log in'),
               ),
               TextButton(
