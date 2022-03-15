@@ -1,4 +1,5 @@
 import 'package:fictional_spork/core/presentation/widgets/widgets.dart';
+import 'package:fictional_spork/core/theme/theme.dart';
 import 'package:fictional_spork/features/auth/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,7 +24,7 @@ class HomePage extends StatelessWidget {
           Text(
             'Fictional Spork',
             style: GoogleFonts.pacifico(
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.secondary,
               textStyle: Theme.of(context).textTheme.headline4,
             ),
           ),
@@ -35,7 +36,9 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pushNamed(LoginPage.routeName);
                 },
-                child: const Text('Log in'),
+                child: const Text(
+                  'Log in',
+                ),
               ),
               TextButton(
                 onPressed: () {},

@@ -15,11 +15,18 @@ class App extends StatelessWidget {
       routes: Routes.generateRoutes,
       theme: ThemeData.light().copyWith(
         backgroundColor: AppColors.backgroundColor,
-        colorScheme: const ColorScheme.light(primary: AppColors.primaryColor),
+        colorScheme: const ColorScheme.light(
+          onPrimary: Colors.white,
+          onSecondary: Colors.white,
+          primary: AppColors.primaryColor,
+          primaryContainer: AppColors.primaryColorLight,
+          secondary: AppColors.secondaryColor,
+          secondaryContainer: AppColors.secondaryColorLight,
+        ),
         primaryColor: AppColors.primaryColor,
         primaryColorDark: AppColors.primaryColorDark,
         primaryColorLight: AppColors.primaryColorLight,
-        scaffoldBackgroundColor: Colors.white,
+        scaffoldBackgroundColor: AppColors.scaffoldBackgroundColor,
         textTheme: GoogleFonts.robotoTextTheme(),
       ),
       darkTheme: ThemeData.dark().copyWith(
