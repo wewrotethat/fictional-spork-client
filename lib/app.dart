@@ -27,6 +27,7 @@ class App extends StatelessWidget {
         primaryColorDark: AppColors.primaryColorDark,
         primaryColorLight: AppColors.primaryColorLight,
         scaffoldBackgroundColor: AppColors.scaffoldBackgroundColor,
+        shadowColor: AppColors.shadowColor,
         textTheme: GoogleFonts.robotoTextTheme(),
       ),
       darkTheme: ThemeData.dark().copyWith(
