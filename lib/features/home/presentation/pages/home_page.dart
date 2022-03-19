@@ -1,5 +1,4 @@
 import 'package:fictional_spork/core/presentation/widgets/widgets.dart';
-import 'package:fictional_spork/core/theme/theme.dart';
 import 'package:fictional_spork/features/auth/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -41,7 +40,9 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(SignUpPage.routeName);
+                },
                 child: const Text('Sign up'),
               )
             ],
