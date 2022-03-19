@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fictional_spork/core/core.dart';
 import 'package:flutter/material.dart';
 
@@ -27,21 +29,25 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildCard(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).shadowColor,
-            blurRadius: 10,
-          )
-        ],
-        color: Theme.of(context).backgroundColor,
-      ),
-      margin: const EdgeInsets.all(20),
+    return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(40),
-        child: _buildForm(context),
+        padding: const EdgeInsets.all(20),
+        child: Ink(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).shadowColor,
+                blurRadius: 10,
+              )
+            ],
+            color: Theme.of(context).backgroundColor,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(40),
+            child: _buildForm(context),
+          ),
+        ),
       ),
     );
   }
@@ -70,6 +76,10 @@ class _LoginPageState extends State<LoginPage> {
           height: 30,
         ),
         _buildSubmitButton(context),
+        const SizedBox(
+          height: 20,
+        ),
+        _buildSocialButtons(context),
       ],
     );
   }
@@ -127,6 +137,48 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       child: const Text('Log in'),
+    );
+  }
+
+  Widget _buildSocialButtons(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildPlatformButton(
+          context,
+          icon: Icon(
+            Icons.facebook,
+            color: Colors.blue[900],
+          ),
+          onPressed: () {
+            log('Icon tapped');
+          },
+        ),
+        _buildPlatformButton(
+          context,
+          icon: Icon(
+            Icons.facebook,
+            color: Colors.blue[900],
+          ),
+          onPressed: () {
+            log('Icon tapped');
+          },
+        )
+      ],
+    );
+  }
+
+  Widget _buildPlatformButton(
+    BuildContext context, {
+    VoidCallback? onPressed,
+    required Icon icon,
+  }) {
+    return IconButton(
+      icon: icon,
+      iconSize: 45,
+      onPressed: onPressed,
+      padding: const EdgeInsets.all(2.5),
+      splashColor: Theme.of(context).primaryColorLight,
     );
   }
 }
