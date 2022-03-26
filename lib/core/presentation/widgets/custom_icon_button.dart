@@ -10,6 +10,7 @@ class CustomIconButton extends StatelessWidget {
     this.height,
     this.icon,
     this.onTap,
+    this.padding,
     this.splashColor,
     this.width,
   }) : super(key: key);
@@ -19,22 +20,26 @@ class CustomIconButton extends StatelessWidget {
   final double? height;
   final Icon? icon;
   final VoidCallback? onTap;
+  final EdgeInsets? padding;
   final Color? splashColor;
   final double? width;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: borderRadius ?? BorderRadius.circular(10),
-      child: Material(
-        color: backgroundColor ?? AppColors.primaryColorLight,
-        child: InkWell(
-          onTap: onTap,
-          splashColor: splashColor ?? AppColors.primaryColor.withOpacity(0.4),
-          child: SizedBox(
-            height: height ?? 35,
-            width: width ?? 35,
-            child: icon,
+    return Padding(
+      padding: padding ?? EdgeInsets.zero,
+      child: ClipRRect(
+        borderRadius: borderRadius ?? BorderRadius.circular(10),
+        child: Material(
+          color: backgroundColor ?? AppColors.primaryColorLight,
+          child: InkWell(
+            onTap: onTap,
+            splashColor: splashColor ?? AppColors.primaryColor.withOpacity(0.4),
+            child: SizedBox(
+              height: height ?? 35,
+              width: width ?? 35,
+              child: icon,
+            ),
           ),
         ),
       ),

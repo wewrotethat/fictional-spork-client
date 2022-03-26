@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:fictional_spork/core/core.dart';
+import 'package:fictional_spork/features/home/presentation/pages/pages.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -129,7 +130,10 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildSubmitButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.of(context).pop();
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          HomePage.routeName,
+          (route) => false,
+        );
       },
       style: ButtonStyle(
         minimumSize: MaterialStateProperty.all(
