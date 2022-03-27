@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
             color: Theme.of(context).backgroundColor,
           ),
           child: Padding(
-            padding: const EdgeInsets.all(40),
+            padding: const EdgeInsets.all(20),
             child: _buildForm(context),
           ),
         ),

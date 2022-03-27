@@ -16,27 +16,29 @@ class SignUpPage extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    return SingleChildScrollView(
+    return Center(
       child: _buildCard(context),
     );
   }
 
   Widget _buildCard(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).shadowColor,
-            blurRadius: 10,
-          )
-        ],
-        color: Theme.of(context).backgroundColor,
-      ),
-      margin: const EdgeInsets.all(20),
-      child: Padding(
-        padding: const EdgeInsets.all(40),
-        child: _buildForm(context),
+    return SingleChildScrollView(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).shadowColor,
+              blurRadius: 10,
+            )
+          ],
+          color: Theme.of(context).backgroundColor,
+        ),
+        margin: const EdgeInsets.all(20),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: _buildForm(context),
+        ),
       ),
     );
   }
