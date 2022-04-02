@@ -1,5 +1,6 @@
 import 'package:fictional_spork/core/core.dart';
-import 'package:fictional_spork/features/home/presentation/pages/pages.dart';
+import 'package:fictional_spork/features/home/domain/value_objects/test_status.dart';
+import 'package:fictional_spork/features/test_entry_detail/presentation/pages/pages.dart';
 import 'package:flutter/material.dart';
 
 class CreateTestEntryPage extends StatelessWidget {
@@ -23,24 +24,11 @@ class CreateTestEntryPage extends StatelessWidget {
 
   Widget _buildCard(BuildContext context) {
     return SingleChildScrollView(
-      child: Padding(
+      child: CustomCard(
+        color: Theme.of(context).backgroundColor,
+        margin: const EdgeInsets.all(20),
         padding: const EdgeInsets.all(20),
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).shadowColor,
-                blurRadius: 10,
-              )
-            ],
-            color: Theme.of(context).backgroundColor,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: _buildForm(context),
-          ),
-        ),
+        child: _buildForm(context),
       ),
     );
   }
@@ -72,12 +60,15 @@ class CreateTestEntryPage extends StatelessWidget {
   Widget _buildSubmitButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          HomePage.routeName,
-          (route) => false,
+        Navigator.of(context).pushNamed(
+          TestEntryDetailPage.routeName,
+          arguments: TestStatus.pending,
         );
       },
       style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(
+          Theme.of(context).colorScheme.secondary,
+        ),
         minimumSize: MaterialStateProperty.all(
           const Size(double.infinity, 40),
         ),

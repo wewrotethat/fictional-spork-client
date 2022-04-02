@@ -23,6 +23,7 @@ class App extends StatelessWidget {
           secondary: AppColors.secondaryColor,
           secondaryContainer: AppColors.secondaryColorLight,
         ),
+        dividerColor: AppColors.secondaryColorDark,
         primaryColor: AppColors.primaryColor,
         primaryColorDark: AppColors.primaryColorDark,
         primaryColorLight: AppColors.primaryColorLight,
@@ -33,6 +34,7 @@ class App extends StatelessWidget {
       darkTheme: ThemeData.dark().copyWith(
         backgroundColor: AppColors.backgroundColor,
         colorScheme: const ColorScheme.light(primary: AppColors.primaryColor),
+        dividerColor: AppColors.secondaryColorDark,
         primaryColor: AppColors.primaryColor,
         primaryColorDark: AppColors.primaryColorDark,
         primaryColorLight: AppColors.primaryColorLight,

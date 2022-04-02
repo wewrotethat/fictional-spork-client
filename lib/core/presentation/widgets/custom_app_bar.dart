@@ -5,6 +5,7 @@ import 'package:fictional_spork/core/theme/theme.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     Key? key,
+    this.actions,
     this.backgroundColor = Colors.transparent,
     this.elevation = 0,
     this.foregroundColor = AppColors.primaryColor,
@@ -13,6 +14,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.title,
   }) : super(key: key);
 
+  final List<Widget>? actions;
   final Color backgroundColor;
   final double elevation;
   final Color foregroundColor;
@@ -23,6 +25,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      actions: actions,
       backgroundColor: backgroundColor,
       elevation: elevation,
       foregroundColor: foregroundColor,

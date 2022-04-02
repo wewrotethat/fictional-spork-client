@@ -23,22 +23,11 @@ class SignUpPage extends StatelessWidget {
 
   Widget _buildCard(BuildContext context) {
     return SingleChildScrollView(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).shadowColor,
-              blurRadius: 10,
-            )
-          ],
-          color: Theme.of(context).backgroundColor,
-        ),
+      child: CustomCard(
+        color: Theme.of(context).backgroundColor,
         margin: const EdgeInsets.all(20),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: _buildForm(context),
-        ),
+        padding: const EdgeInsets.all(20),
+        child: _buildForm(context),
       ),
     );
   }
@@ -46,6 +35,11 @@ class SignUpPage extends StatelessWidget {
   Widget _buildForm(BuildContext context) {
     return Column(
       children: [
+        _buildTitle(context),
+        const Divider(
+          endIndent: 20,
+          indent: 20,
+        ),
         _buildFirstNameField(context),
         _buildSpacer(context),
         _buildLastNameField(context),
@@ -63,6 +57,13 @@ class SignUpPage extends StatelessWidget {
           width: double.infinity,
         )
       ],
+    );
+  }
+
+  Widget _buildTitle(BuildContext context) {
+    return Text(
+      'Please complete the form',
+      style: Theme.of(context).textTheme.headline6,
     );
   }
 
@@ -123,6 +124,9 @@ class SignUpPage extends StatelessWidget {
         Navigator.of(context).pop();
       },
       style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(
+          Theme.of(context).colorScheme.secondary,
+        ),
         minimumSize: MaterialStateProperty.all(
           const Size(double.infinity, 40),
         ),

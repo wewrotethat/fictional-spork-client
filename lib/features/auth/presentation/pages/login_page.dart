@@ -31,24 +31,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildCard(BuildContext context) {
     return SingleChildScrollView(
-      child: Padding(
+      child: CustomCard(
+        borderRadius: BorderRadius.circular(10),
+        color: Theme.of(context).backgroundColor,
+        margin: const EdgeInsets.all(20),
         padding: const EdgeInsets.all(20),
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).shadowColor,
-                blurRadius: 10,
-              )
-            ],
-            color: Theme.of(context).backgroundColor,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: _buildForm(context),
-          ),
-        ),
+        child: _buildForm(context),
       ),
     );
   }
@@ -77,10 +65,6 @@ class _LoginPageState extends State<LoginPage> {
           height: 30,
         ),
         _buildSubmitButton(context),
-        const SizedBox(
-          height: 20,
-        ),
-        _buildSocialButtons(context),
       ],
     );
   }
@@ -127,6 +111,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // ignore: unused_element
   Widget _buildSubmitButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
@@ -139,6 +124,9 @@ class _LoginPageState extends State<LoginPage> {
         minimumSize: MaterialStateProperty.all(
           const Size(double.infinity, 40),
         ),
+        backgroundColor: MaterialStateProperty.all(
+          Theme.of(context).colorScheme.secondary,
+        ),
       ),
       child: const Text('Log in'),
     );
@@ -150,9 +138,9 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         _buildPlatformButton(
           context,
-          icon: Icon(
+          icon: const Icon(
             Icons.facebook,
-            color: Colors.blue[900],
+            color: Colors.blue,
           ),
           onPressed: () {
             log('Icon tapped');
@@ -160,9 +148,9 @@ class _LoginPageState extends State<LoginPage> {
         ),
         _buildPlatformButton(
           context,
-          icon: Icon(
+          icon: const Icon(
             Icons.facebook,
-            color: Colors.blue[900],
+            color: Colors.blue,
           ),
           onPressed: () {
             log('Icon tapped');

@@ -7,6 +7,13 @@ class Routes {
         HomePage.routeName: (context) => const HomePage(),
         LoginPage.routeName: (context) => const LoginPage(),
         SignUpPage.routeName: (context) => const SignUpPage(),
+        TestEntryDetailPage.routeName: (context) {
+          final testStatus =
+              ModalRoute.of(context)?.settings.arguments as TestStatus;
+          return TestEntryDetailPage(
+            testStatus: testStatus,
+          );
+        },
         WelcomePage.routeName: (context) => const WelcomePage(),
       };
 }

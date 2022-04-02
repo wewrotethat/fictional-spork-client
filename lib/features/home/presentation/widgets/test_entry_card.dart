@@ -1,3 +1,5 @@
+import 'package:fictional_spork/core/core.dart';
+import 'package:fictional_spork/features/test_entry_detail/presentation/pages/pages.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fictional_spork/features/home/domain/domain.dart';
@@ -11,24 +13,15 @@ class TestEntryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(5),
-        onTap: () {},
-        child: Ink(
-          decoration: BoxDecoration(
-            color: _getBackgroundColor(context),
-            border: Border.all(color: Theme.of(context).primaryColor),
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: [
-              BoxShadow(color: Theme.of(context).shadowColor, blurRadius: 10)
-            ],
-          ),
-          padding: const EdgeInsets.all(10),
-          child: _buildContent(context),
-        ),
-      ),
+    return CustomCard(
+      color: _getBackgroundColor(context),
+      onTap: () {
+        Navigator.of(context).pushNamed(
+          TestEntryDetailPage.routeName,
+          arguments: testStatus,
+        );
+      },
+      child: _buildContent(context),
     );
   }
 
@@ -64,7 +57,7 @@ class TestEntryCard extends StatelessWidget {
               _buildProperty(
                 context,
                 label: 'Status',
-                value: _getTestStatusName(testStatus),
+                value: getTestStatusName(testStatus),
               ),
             ],
           ),
@@ -95,19 +88,6 @@ class TestEntryCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _getTestStatusName(TestStatus testStatus) {
-    switch (testStatus) {
-      case TestStatus.pending:
-        return 'Pending';
-      case TestStatus.queued:
-        return 'Queued';
-      case TestStatus.resultReady:
-        return 'Result Ready';
-      default:
-        return 'Unknown';
-    }
   }
 
   Color? _getBackgroundColor(BuildContext context) {
