@@ -1,3 +1,4 @@
+import 'package:fictional_spork/features/test_entry_detail/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fictional_spork/core/core.dart';
@@ -244,7 +245,7 @@ class TestEntryDetailPage extends StatelessWidget {
 
   Widget _buildViewSpecimenButton(BuildContext context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () => _showImageSheet(context),
       style: ButtonStyle(
         minimumSize: MaterialStateProperty.all(
           const Size(double.infinity, 40),
@@ -256,13 +257,24 @@ class TestEntryDetailPage extends StatelessWidget {
 
   Widget _buildViewSegmentedSpecimenButton(BuildContext context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () => _showImageSheet(context),
       style: ButtonStyle(
         minimumSize: MaterialStateProperty.all(
           const Size(double.infinity, 40),
         ),
       ),
       child: const Text('View Segmented Specimen Image'),
+    );
+  }
+
+  Future<void> _showImageSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ImagePreview(
+          testStatus: testStatus,
+        );
+      },
     );
   }
 
