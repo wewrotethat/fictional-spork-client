@@ -5,7 +5,7 @@ import 'package:fictional_spork/features/home/domain/value_objects/test_status.d
 class ImagePreview extends StatelessWidget {
   const ImagePreview({
     Key? key,
-     this.specimenOnly = true,
+     required this.specimenOnly,
     required this.testStatus,
   }) : super(key: key);
 

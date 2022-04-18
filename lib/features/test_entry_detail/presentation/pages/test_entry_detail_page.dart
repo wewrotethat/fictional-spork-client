@@ -245,7 +245,10 @@ class TestEntryDetailPage extends StatelessWidget {
 
   Widget _buildViewSpecimenButton(BuildContext context) {
     return TextButton(
-      onPressed: () => _showImageSheet(context),
+      onPressed: () => _showImageSheet(
+        context,
+        specimenOnly: true,
+      ),
       style: ButtonStyle(
         minimumSize: MaterialStateProperty.all(
           const Size(double.infinity, 40),
@@ -267,11 +270,13 @@ class TestEntryDetailPage extends StatelessWidget {
     );
   }
 
-  Future<void> _showImageSheet(BuildContext context) {
+  Future<void> _showImageSheet(BuildContext context,
+      {bool specimenOnly = false}) {
     return showModalBottomSheet(
       context: context,
       builder: (context) {
         return ImagePreview(
+          specimenOnly: specimenOnly,
           testStatus: testStatus,
         );
       },
