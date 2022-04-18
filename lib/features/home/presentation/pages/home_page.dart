@@ -12,14 +12,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        leading: CustomIconButton(
-          backgroundColor: Colors.transparent,
-          height: 20,
-          icon: const Icon(Icons.menu),
-          onTap: () {},
-          padding: const EdgeInsets.all(10),
-          width: 20,
-        ),
         title: Text(
           'Fictional Spork',
           style: GoogleFonts.pacifico(
