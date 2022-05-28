@@ -15,7 +15,7 @@ class TestEntryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomCard(
       color: _getBackgroundColor(context),
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       onTap: () {
         Navigator.of(context).pushNamed(
           TestEntryDetailPage.routeName,
