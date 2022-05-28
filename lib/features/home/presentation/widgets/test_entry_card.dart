@@ -15,6 +15,7 @@ class TestEntryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomCard(
       color: _getBackgroundColor(context),
+      padding: EdgeInsets.all(20),
       onTap: () {
         Navigator.of(context).pushNamed(
           TestEntryDetailPage.routeName,
@@ -72,7 +73,7 @@ class TestEntryCard extends StatelessWidget {
     required String value,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.5),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: RichText(
         text: TextSpan(
           style: Theme.of(context).textTheme.bodyText1,

@@ -4,7 +4,6 @@ class CustomCard extends StatelessWidget {
   const CustomCard({
     Key? key,
     this.borderColor,
-    this.borderRadius,
     this.boxShadow,
     required this.child,
     this.color,
@@ -13,7 +12,6 @@ class CustomCard extends StatelessWidget {
     this.padding,
   }) : super(key: key);
   final Color? borderColor;
-  final BorderRadius? borderRadius;
   final BoxShadow? boxShadow;
   final Widget child;
   final Color? color;
@@ -26,15 +24,12 @@ class CustomCard extends StatelessWidget {
     return Padding(
       padding: margin ?? const EdgeInsets.all(5),
       child: InkWell(
-        borderRadius: borderRadius ?? BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(15),
         onTap: onTap,
         child: Ink(
           decoration: BoxDecoration(
             color: color ?? Theme.of(context).backgroundColor,
-            border: Border.all(
-              color: borderColor ?? Theme.of(context).primaryColor,
-            ),
-            borderRadius: borderRadius ?? BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(15),
             boxShadow: [
               boxShadow ??
                   BoxShadow(

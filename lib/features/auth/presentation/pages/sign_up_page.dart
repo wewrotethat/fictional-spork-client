@@ -36,9 +36,15 @@ class SignUpPage extends StatelessWidget {
     return Column(
       children: [
         _buildTitle(context),
+        const SizedBox(
+          height: 5,
+        ),
         const Divider(
           endIndent: 20,
           indent: 20,
+        ),
+        const SizedBox(
+          height: 5,
         ),
         _buildFirstNameField(context),
         _buildSpacer(context),
@@ -50,6 +56,9 @@ class SignUpPage extends StatelessWidget {
         _buildSpacer(context),
         _buildConfirmPasswordField(context),
         _buildSpacer(context),
+        const SizedBox(
+          height: 30,
+        ),
         _buildSubmitButton(context),
         _buildSpacer(context),
         _buildLoginButton(context),

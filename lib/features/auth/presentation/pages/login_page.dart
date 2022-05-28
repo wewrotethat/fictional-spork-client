@@ -32,10 +32,12 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildCard(BuildContext context) {
     return SingleChildScrollView(
       child: CustomCard(
-        borderRadius: BorderRadius.circular(10),
         color: Theme.of(context).backgroundColor,
         margin: const EdgeInsets.all(20),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 40,
+        ),
         child: _buildForm(context),
       ),
     );
@@ -47,14 +49,14 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         _buildTitle(context),
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         const Divider(
           endIndent: 20,
           indent: 20,
         ),
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         _buildEmailField(context),
         const SizedBox(
@@ -62,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         _buildPasswordField(context),
         const SizedBox(
-          height: 30,
+          height: 50,
         ),
         _buildSubmitButton(context),
       ],

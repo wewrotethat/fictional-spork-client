@@ -15,19 +15,39 @@ class App extends StatelessWidget {
       routes: Routes.generateRoutes,
       theme: ThemeData.light().copyWith(
         backgroundColor: AppColors.backgroundColor,
+        buttonTheme: ButtonThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          height: 40,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all(AppColors.secondaryColor),
+              foregroundColor: MaterialStateProperty.all(Colors.white),
+              fixedSize:
+                  MaterialStateProperty.all(const Size(double.infinity, 50)),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              textStyle: MaterialStateProperty.all(
+                Theme.of(context).textTheme.subtitle1,
+              )),
+        ),
         colorScheme: const ColorScheme.light(
           onPrimary: Colors.white,
           onSecondary: Colors.white,
           primary: AppColors.primaryColor,
-          primaryContainer: AppColors.primaryColorLight,
           secondary: AppColors.secondaryColor,
-          secondaryContainer: AppColors.secondaryColorLight,
         ),
         dividerColor: AppColors.secondaryColorDark,
         primaryColor: AppColors.primaryColor,
         primaryColorDark: AppColors.primaryColorDark,
         primaryColorLight: AppColors.primaryColorLight,
-        scaffoldBackgroundColor: AppColors.scaffoldBackgroundColor,
+        scaffoldBackgroundColor: AppColors.backgroundColor,
         shadowColor: AppColors.shadowColor,
         textTheme: GoogleFonts.robotoTextTheme(),
       ),
