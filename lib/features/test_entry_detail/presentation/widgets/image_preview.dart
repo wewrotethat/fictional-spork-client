@@ -5,7 +5,7 @@ import 'package:fictional_spork/features/home/domain/value_objects/test_status.d
 class ImagePreview extends StatelessWidget {
   const ImagePreview({
     Key? key,
-     required this.specimenOnly,
+    required this.specimenOnly,
     required this.testStatus,
   }) : super(key: key);
 
@@ -38,7 +38,7 @@ class ImagePreview extends StatelessWidget {
               height: 200,
             ),
           const SizedBox(
-            height: 20,
+            height: 40,
           ),
           if (testStatus == TestStatus.queued) _buildReUploadButton(context)
         ],
