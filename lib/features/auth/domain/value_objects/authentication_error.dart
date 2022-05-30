@@ -1,0 +1,4 @@
+enum AuthenticationError {
+  systemError,
+  invalidCredentials,
+}

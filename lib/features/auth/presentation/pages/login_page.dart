@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fictional_spork/core/core.dart';
 import 'package:fictional_spork/features/home/presentation/pages/pages.dart';
 import 'package:flutter/material.dart';
@@ -131,48 +129,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       child: const Text('Log in'),
-    );
-  }
-
-  Widget _buildSocialButtons(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildPlatformButton(
-          context,
-          icon: const Icon(
-            Icons.facebook,
-            color: Colors.blue,
-          ),
-          onPressed: () {
-            log('Icon tapped');
-          },
-        ),
-        _buildPlatformButton(
-          context,
-          icon: const Icon(
-            Icons.facebook,
-            color: Colors.blue,
-          ),
-          onPressed: () {
-            log('Icon tapped');
-          },
-        )
-      ],
-    );
-  }
-
-  Widget _buildPlatformButton(
-    BuildContext context, {
-    VoidCallback? onPressed,
-    required Icon icon,
-  }) {
-    return IconButton(
-      icon: icon,
-      iconSize: 45,
-      onPressed: onPressed,
-      padding: const EdgeInsets.all(2.5),
-      splashColor: Theme.of(context).primaryColorLight,
     );
   }
 }
