@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:fictional_spork/core/constants/constants.dart';
 import 'package:fictional_spork/core/ioc/ioc.dart';
 import 'package:fictional_spork/features/auth/data/mappers/mappers.dart';
 import 'package:fictional_spork/features/auth/domain/domain.dart';
@@ -25,6 +26,8 @@ class AuthenticationRemoteRepo implements AuthenticationRepository {
         final authResponse = AuthenticationResponseMapper.responseFromMap(
           response.data,
         );
+        await IntegrationIoc.localStorage
+            .setString(Keys.token, authResponse.token);
         return right(authResponse);
       }
       return left(
