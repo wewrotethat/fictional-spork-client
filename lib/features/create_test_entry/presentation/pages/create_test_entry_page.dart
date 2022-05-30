@@ -24,12 +24,8 @@ class CreateTestEntryPage extends StatelessWidget {
 
   Widget _buildCard(BuildContext context) {
     return SingleChildScrollView(
-      child: CustomCard(
-        color: Theme.of(context).backgroundColor,
-        margin: const EdgeInsets.all(20),
-        padding: const EdgeInsets.all(20),
-        child: _buildForm(context),
-      ),
+      padding: const EdgeInsets.all(20),
+      child: _buildForm(context),
     );
   }
 

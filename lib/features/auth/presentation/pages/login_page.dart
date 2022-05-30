@@ -165,7 +165,8 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       );
-      Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(HomePage.routeName, ((route) => false));
     }
     if (state is LoginErrorState) {
       ScaffoldMessenger.of(context).showSnackBar(
