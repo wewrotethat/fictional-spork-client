@@ -23,12 +23,8 @@ class SignUpPage extends StatelessWidget {
 
   Widget _buildCard(BuildContext context) {
     return SingleChildScrollView(
-      child: CustomCard(
-        color: Theme.of(context).backgroundColor,
-        margin: const EdgeInsets.all(20),
-        padding: const EdgeInsets.all(20),
-        child: _buildForm(context),
-      ),
+      padding: const EdgeInsets.all(20),
+      child: _buildForm(context),
     );
   }
 
@@ -56,6 +52,7 @@ class SignUpPage extends StatelessWidget {
         _buildSpacer(context),
         _buildConfirmPasswordField(context),
         _buildSpacer(context),
+        _buildMedicalLicenseIdField(context),
         const SizedBox(
           height: 30,
         ),
@@ -123,6 +120,24 @@ class SignUpPage extends StatelessWidget {
       decoration: InputDecoration(
         labelText: 'Confirm Password',
         prefixIcon: Icon(Icons.password_rounded),
+      ),
+    );
+  }
+
+  Widget _buildMedicalLicenseIdField(BuildContext context) {
+    return const TextField(
+      decoration: InputDecoration(
+        labelText: 'Medical License ID',
+        prefixIcon: Icon(Icons.card_membership_rounded),
+      ),
+    );
+  }
+
+  Widget _buildPhoneField(BuildContext context) {
+    return const TextField(
+      decoration: InputDecoration(
+        labelText: 'Medical License ID',
+        prefixIcon: Icon(Icons.email_rounded),
       ),
     );
   }
