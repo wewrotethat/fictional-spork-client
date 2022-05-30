@@ -5,12 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitialState());
-  final authRepo = AuthenticationIoc.authRepo;
+  final _authRepo = AuthenticationIoc.authRepo;
 
   Future<void> login(
       AuthenticationValueObject authenticationValueObject) async {
-    emit(LoginInitialState());
-    final result = await authRepo.authenticate(authenticationValueObject);
+    emit(LoginProgressState());
+    final result = await _authRepo.authenticate(authenticationValueObject);
     result.fold(
       (l) => emit(
         LoginErrorState(

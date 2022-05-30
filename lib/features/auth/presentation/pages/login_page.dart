@@ -1,6 +1,9 @@
 import 'package:fictional_spork/core/core.dart';
+import 'package:fictional_spork/features/auth/auth.dart';
 import 'package:fictional_spork/features/home/presentation/pages/pages.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:form_validator/form_validator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -12,6 +15,18 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = false;
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+  final _loginCubit = LoginCubit();
+
+  @override
+  void initState() {
+    _loginCubit.stream.listen(_loginStateListener);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,65 +44,46 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildCard(BuildContext context) {
     return SingleChildScrollView(
-      child: CustomCard(
-        color: Theme.of(context).backgroundColor,
-        margin: const EdgeInsets.all(20),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 40,
-        ),
-        child: _buildForm(context),
-      ),
+      padding: const EdgeInsets.all(20),
+      child: _buildForm(context),
     );
   }
 
   Widget _buildForm(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildTitle(context),
-        const SizedBox(
-          height: 5,
-        ),
-        const Divider(
-          endIndent: 20,
-          indent: 20,
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        _buildEmailField(context),
-        const SizedBox(
-          height: 20,
-        ),
-        _buildPasswordField(context),
-        const SizedBox(
-          height: 50,
-        ),
-        _buildSubmitButton(context),
-      ],
-    );
-  }
-
-  Widget _buildTitle(context) {
-    return Text(
-      'Please enter your credentials',
-      style: Theme.of(context).textTheme.headline6,
-    );
-  }
-
-  Widget _buildEmailField(BuildContext context) {
-    return const TextField(
-      decoration: InputDecoration(
-        prefixIcon: Icon(Icons.email_rounded),
-        hintText: 'john.doe@email.com',
-        labelText: 'Email',
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildEmailField(context),
+          const SizedBox(
+            height: 20,
+          ),
+          _buildPasswordField(context),
+          const SizedBox(
+            height: 50,
+          ),
+          _buildLoginButton(context),
+        ],
       ),
     );
   }
 
+  Widget _buildEmailField(BuildContext context) {
+    return TextFormField(
+      controller: _emailController,
+      decoration: const InputDecoration(
+        prefixIcon: Icon(Icons.email_rounded),
+        hintText: 'john.doe@email.com',
+        labelText: 'Email',
+      ),
+      validator: ValidationBuilder().email().build(),
+    );
+  }
+
   Widget _buildPasswordField(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      controller: _passwordController,
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.password_rounded),
         labelText: 'Password',
@@ -111,24 +107,83 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // ignore: unused_element
-  Widget _buildSubmitButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          HomePage.routeName,
-          (route) => false,
+  Widget _buildLoginButton(BuildContext context) {
+    return BlocBuilder<LoginCubit, LoginState>(
+      bloc: _loginCubit,
+      builder: (context, state) {
+        return ElevatedButton(
+          onPressed: state is LoginProgressState ? null : _onSubmit,
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              Theme.of(context).colorScheme.secondary,
+            ),
+            minimumSize: MaterialStateProperty.all(
+              const Size(double.infinity, 40),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (state is LoginProgressState)
+                const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 1,
+                  ),
+                ),
+              if (state is LoginProgressState)
+                const SizedBox(
+                  width: 20,
+                ),
+              const Text('Log in'),
+            ],
+          ),
         );
       },
-      style: ButtonStyle(
-        minimumSize: MaterialStateProperty.all(
-          const Size(double.infinity, 40),
-        ),
-        backgroundColor: MaterialStateProperty.all(
-          Theme.of(context).colorScheme.secondary,
-        ),
-      ),
-      child: const Text('Log in'),
     );
+  }
+
+  void _onSubmit() {
+    if (_formKey.currentState?.validate() ?? false) {
+      _loginCubit.login(
+        AuthenticationValueObject(
+          email: _emailController.text,
+          password: _passwordController.text,
+        ),
+      );
+    }
+  }
+
+  void _loginStateListener(LoginState state) {
+    if (state is LoginCompletedState) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Login successful!',
+          ),
+        ),
+      );
+      Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+    }
+    if (state is LoginErrorState) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            getErrorMessage(state.error),
+          ),
+        ),
+      );
+    }
+  }
+
+  String getErrorMessage(AuthenticationError error) {
+    switch (error) {
+      case AuthenticationError.invalidCredentials:
+        return 'Invalid credentials';
+      default:
+        return 'An error occurred while authenticating';
+    }
   }
 }

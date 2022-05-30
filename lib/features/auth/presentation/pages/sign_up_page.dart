@@ -1,9 +1,6 @@
 import 'package:fictional_spork/core/domain/value_objects/value_objects.dart';
 import 'package:fictional_spork/core/presentation/widgets/widgets.dart';
-import 'package:fictional_spork/features/auth/presentation/blocs/blocs.dart';
-import 'package:fictional_spork/features/auth/presentation/pages/pages.dart';
 import 'package:fictional_spork/features/auth/presentation/presentation.dart';
-import 'package:fictional_spork/features/home/presentation/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
@@ -27,6 +24,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final _confirmPasswordController = TextEditingController();
   final _medicalLicenseIdController = TextEditingController();
   final _phoneNumberController = TextEditingController();
+
+  bool _obscurePassword = true;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -148,9 +147,24 @@ class _SignUpPageState extends State<SignUpPage> {
     return TextFormField(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: _confirmPasswordController,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         labelText: 'Confirm Password',
-        prefixIcon: Icon(Icons.password_rounded),
+        prefixIcon: const Icon(Icons.password_rounded),
+        suffixIcon: CustomIconButton(
+          backgroundColor: Colors.transparent,
+          height: 20,
+          icon: Icon(
+            _obscurePassword
+                ? Icons.visibility_rounded
+                : Icons.visibility_off_rounded,
+          ),
+          onTap: () {
+            setState(() {
+              _obscurePassword = !_obscurePassword;
+            });
+          },
+          width: 20,
+        ),
       ),
       validator: ValidationBuilder()
           .add((value) {

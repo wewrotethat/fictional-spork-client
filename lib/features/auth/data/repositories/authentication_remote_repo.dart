@@ -18,7 +18,7 @@ class AuthenticationRemoteRepo implements AuthenticationRepository {
         headers: {
           'content-type': 'application/json',
         },
-        url: '$_baseUrl/users/$id',
+        url: '$_baseUrl/auth',
       );
 
       if (response.isOk) {
