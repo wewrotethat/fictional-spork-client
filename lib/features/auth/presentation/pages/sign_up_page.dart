@@ -53,6 +53,8 @@ class SignUpPage extends StatelessWidget {
         _buildConfirmPasswordField(context),
         _buildSpacer(context),
         _buildMedicalLicenseIdField(context),
+        _buildSpacer(context),
+        _buildPhoneField(context),
         const SizedBox(
           height: 30,
         ),
@@ -136,7 +138,7 @@ class SignUpPage extends StatelessWidget {
   Widget _buildPhoneField(BuildContext context) {
     return const TextField(
       decoration: InputDecoration(
-        labelText: 'Medical License ID',
+        labelText: 'Phone Number',
         prefixIcon: Icon(Icons.email_rounded),
       ),
     );
