@@ -139,7 +139,7 @@ class SignUpPage extends StatelessWidget {
     return const TextField(
       decoration: InputDecoration(
         labelText: 'Phone Number',
-        prefixIcon: Icon(Icons.email_rounded),
+        prefixIcon: Icon(Icons.phone_android_rounded),
       ),
     );
   }
