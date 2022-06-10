@@ -1,4 +1,4 @@
-import 'package:fictional_spork/features/features.dart';
+import 'package:fictional_spork/features/splash/presentation/pages/pages.dart';
 import 'package:fictional_spork/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,7 +11,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: WelcomePage.routeName,
+      initialRoute: SplashPage.routeName,
       routes: Routes.generateRoutes,
       theme: ThemeData.light().copyWith(
         backgroundColor: AppColors.backgroundColor,

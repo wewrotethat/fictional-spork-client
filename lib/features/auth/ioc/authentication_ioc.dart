@@ -5,13 +5,21 @@ import 'package:get_it/get_it.dart';
 class AuthenticationIoc {
   static final _locator = GetIt.instance;
 
-  static Future<void> init() async {
-    _locator.registerLazySingleton<AuthenticationRepository>(
-      () => AuthenticationRemoteRepo(),
-    );
+  static void init() {
+    _locator
+      ..registerLazySingleton<AuthenticationRepository>(
+        () => AuthenticationRemoteRepo(),
+      )
+      ..registerLazySingleton<AuthCheckRepo>(
+        () => AuthCheckLocalRepo(),
+      );
   }
 
   static AuthenticationRepository get authRepo {
     return _locator.get<AuthenticationRepository>();
+  }
+
+  static AuthCheckRepo get authCheckRepo {
+    return _locator.get<AuthCheckRepo>();
   }
 }

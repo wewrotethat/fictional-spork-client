@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 class CoreFeaturesIoc {
   static final _locator = GetIt.instance;
 
-  static Future<void> init() async {
+  static void init() {
     _locator.registerLazySingleton<UserRepository>(
       () => UserRemoteRepository(),
     );
