@@ -138,6 +138,10 @@ class TestEntryDetailPage extends StatelessWidget {
             label: 'Status',
             value: getTestStatusName(testStatus),
           ),
+          TextButton(
+            onPressed: () {},
+            child: const Text('Start diagnosis'),
+          )
         ],
       ),
     );

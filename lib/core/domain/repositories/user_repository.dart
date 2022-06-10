@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+
 import 'package:fictional_spork/core/domain/entities/entities.dart';
 import 'package:fictional_spork/core/domain/value_objects/value_objects.dart';
 
@@ -13,4 +14,9 @@ abstract class UserRepository {
   );
 }
 
-class UserRepositoryFailure {}
+class UserRepositoryFailure {
+  UserRepositoryFailure({
+    this.error,
+  });
+  final ErrorResponse? error;
+}

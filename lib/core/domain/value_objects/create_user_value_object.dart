@@ -8,7 +8,6 @@ class CreateUserValueObject {
     required this.medicalLicenseId,
     required this.password,
     required this.phoneNumber,
-    required this.profilePictureUrl,
   });
 
   final String email;
@@ -17,7 +16,6 @@ class CreateUserValueObject {
   final String medicalLicenseId;
   final String password;
   final String phoneNumber;
-  final String profilePictureUrl;
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
@@ -28,7 +26,6 @@ class CreateUserValueObject {
     result.addAll({'medicalLicenseId': medicalLicenseId});
     result.addAll({'password': password});
     result.addAll({'phoneNumber': phoneNumber});
-    result.addAll({'profilePictureUrl': profilePictureUrl});
 
     return result;
   }

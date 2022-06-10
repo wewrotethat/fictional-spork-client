@@ -1,5 +1,5 @@
 import 'package:fictional_spork/core/data/mappers/mappers.dart';
-import 'package:fictional_spork/core/domain/entities/user.dart';
+import 'package:fictional_spork/core/domain/entities/entities.dart';
 import 'package:dartz/dartz.dart';
 import 'package:fictional_spork/core/domain/repositories/repositories.dart';
 import 'package:fictional_spork/core/domain/value_objects/update_user_value_object.dart';
@@ -24,7 +24,8 @@ class UserRemoteRepository implements UserRepository {
         final user = UserMapper.userFromMap(response.data);
         return right(user);
       }
-      return left(UserRepositoryFailure());
+      final errorResponse = ErrorResponse.fromMap(response.data);
+      return left(UserRepositoryFailure(error: errorResponse));
     } catch (e) {
       return left(UserRepositoryFailure());
     }

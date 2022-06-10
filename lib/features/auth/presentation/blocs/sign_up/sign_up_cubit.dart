@@ -11,7 +11,9 @@ class SignUpCubit extends Cubit<SignUpState> {
     emit(SignUpProgressState());
     final result = await _userRepo.createUser(createUserValueObject);
     result.fold(
-      (l) => emit(SignUpErrorState()),
+      (l) => emit(
+        SignUpErrorState(error: l.error),
+      ),
       (user) => emit(SignUpCompletedState(user: user)),
     );
   }

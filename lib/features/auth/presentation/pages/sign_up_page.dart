@@ -1,9 +1,12 @@
 import 'package:fictional_spork/core/domain/value_objects/value_objects.dart';
+import 'package:fictional_spork/core/extensions/extensions.dart';
 import 'package:fictional_spork/core/presentation/widgets/widgets.dart';
 import 'package:fictional_spork/features/auth/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -23,11 +26,14 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _medicalLicenseIdController = TextEditingController();
-  final _phoneNumberController = TextEditingController();
+  final _phoneController = PhoneController(null);
 
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   final _formKey = GlobalKey<FormState>();
+
+  final _selectorNavigator = const CountrySelectorNavigator.modalBottomSheet();
 
   @override
   void initState() {
@@ -38,7 +44,15 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: CustomAppBar(
+        title: Text(
+          'Fictional Spork - Sign Up',
+          style: GoogleFonts.pacifico(
+            color: Theme.of(context).colorScheme.secondary,
+            textStyle: Theme.of(context).textTheme.subtitle1,
+          ),
+        ),
+      ),
       body: _buildBody(context),
     );
   }
@@ -135,20 +149,8 @@ class _SignUpPageState extends State<SignUpPage> {
     return TextFormField(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: _passwordController,
-      decoration: const InputDecoration(
-        labelText: 'Password',
-        prefixIcon: Icon(Icons.password_rounded),
-      ),
-      validator: ValidationBuilder().minLength(8).build(),
-    );
-  }
-
-  Widget _buildConfirmPasswordField(BuildContext context) {
-    return TextFormField(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      controller: _confirmPasswordController,
       decoration: InputDecoration(
-        labelText: 'Confirm Password',
+        labelText: 'Password',
         prefixIcon: const Icon(Icons.password_rounded),
         suffixIcon: CustomIconButton(
           backgroundColor: Colors.transparent,
@@ -166,6 +168,35 @@ class _SignUpPageState extends State<SignUpPage> {
           width: 20,
         ),
       ),
+      obscureText: _obscurePassword,
+      validator: ValidationBuilder().minLength(8).build(),
+    );
+  }
+
+  Widget _buildConfirmPasswordField(BuildContext context) {
+    return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      controller: _confirmPasswordController,
+      decoration: InputDecoration(
+        labelText: 'Confirm Password',
+        prefixIcon: const Icon(Icons.password_rounded),
+        suffixIcon: CustomIconButton(
+          backgroundColor: Colors.transparent,
+          height: 20,
+          icon: Icon(
+            _obscureConfirmPassword
+                ? Icons.visibility_rounded
+                : Icons.visibility_off_rounded,
+          ),
+          onTap: () {
+            setState(() {
+              _obscureConfirmPassword = !_obscureConfirmPassword;
+            });
+          },
+          width: 20,
+        ),
+      ),
+      obscureText: _obscureConfirmPassword,
       validator: ValidationBuilder()
           .add((value) {
             if (value != _passwordController.text) {
@@ -191,16 +222,21 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _buildPhoneField(BuildContext context) {
-    return TextFormField(
+    return PhoneFormField(
+      autofillHints: const [AutofillHints.telephoneNumber],
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      controller: _phoneNumberController,
+      controller: _phoneController,
+      countryCodeStyle: Theme.of(context).textTheme.subtitle1,
+      countrySelectorNavigator: _selectorNavigator,
+      cursorColor: Theme.of(context).colorScheme.primary,
+      defaultCountry: IsoCode.ET,
       decoration: const InputDecoration(
         labelText: 'Phone Number',
-        prefixIcon: Icon(
-          Icons.phone_android_rounded,
-        ),
+        hintText: 'Phone Number',
       ),
-      validator: ValidationBuilder().minLength(10).maxLength(13).build(),
+      showFlagInInput: true,
+      textDirection: TextDirection.ltr,
+      validator: _getValidator(),
     );
   }
 
@@ -259,18 +295,35 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  PhoneNumberInputValidator? _getValidator() {
+    List<PhoneNumberInputValidator> validators = [];
+    validators.add(
+      PhoneValidator.required(
+        errorText: 'Phone number is required',
+      ),
+    );
+
+    validators.add(PhoneValidator.validMobile(
+      errorText: 'Please input a valid phone number',
+    ));
+
+    validators.add(PhoneValidator.validCountry(
+      [IsoCode.ET],
+      errorText: 'Please enter a phone number from Ethiopia',
+    ));
+
+    return validators.isNotEmpty ? PhoneValidator.compose(validators) : null;
+  }
+
   void _onSubmit() {
     if (_formKey.currentState?.validate() ?? false) {
       final createUserValueObject = CreateUserValueObject(
-        firstName: _firstNameController.text,
-        lastName: _lastNameController.text,
-        email: _emailController.text,
-        password: _passwordController.text,
-        medicalLicenseId: _medicalLicenseIdController.text,
-        phoneNumber: _phoneNumberController.text,
-        //TODO(Yabsra): remove this from the api or do upload prior to sign up
-        profilePictureUrl: 'https://google.com',
-      );
+          firstName: _firstNameController.text,
+          lastName: _lastNameController.text,
+          email: _emailController.text,
+          password: _passwordController.text,
+          medicalLicenseId: _medicalLicenseIdController.text,
+          phoneNumber: _phoneController.value!.international);
       _signUpCubit.signUp(createUserValueObject);
     }
   }
@@ -287,10 +340,21 @@ class _SignUpPageState extends State<SignUpPage> {
       Navigator.of(context).pushNamed(LoginPage.routeName);
     }
     if (state is SignUpErrorState) {
+      late String message;
+      if (state.error == null) {
+        message = 'An error occurred while trying to sign you up!';
+      } else if (state.error!.error != null) {
+        message = state.error!.error!.capitalize();
+      } else if (state.error!.validationErrors != null) {
+        message = state.error!.validationErrors!
+            .map((error) => error.capitalize())
+            .join(', ');
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'An error occurred while trying to sign you up!',
+            message,
           ),
         ),
       );

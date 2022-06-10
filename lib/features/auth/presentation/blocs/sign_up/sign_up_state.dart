@@ -14,4 +14,10 @@ class SignUpCompletedState extends SignUpState {
   final User user;
 }
 
-class SignUpErrorState extends SignUpState {}
+class SignUpErrorState extends SignUpState {
+  SignUpErrorState({
+    required this.error,
+  });
+
+  ErrorResponse? error;
+}

@@ -1,4 +1,4 @@
-import 'package:fictional_spork/core/presentation/widgets/widgets.dart';  
+import 'package:fictional_spork/core/presentation/widgets/widgets.dart';
 import 'package:fictional_spork/features/auth/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

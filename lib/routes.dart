@@ -1,4 +1,5 @@
 import 'package:fictional_spork/features/features.dart';
+import 'package:fictional_spork/features/phone_verification/phone_verification.dart';
 import 'package:flutter/widgets.dart';
 
 class Routes {
@@ -15,5 +16,7 @@ class Routes {
           );
         },
         WelcomePage.routeName: (context) => const WelcomePage(),
+        PhoneVerificationPage.routeName: (context) =>
+            const PhoneVerificationPage(),
       };
 }
