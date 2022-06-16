@@ -1,5 +1,6 @@
 import 'package:fictional_spork/core/domain/entities/entities.dart';
 import 'package:fictional_spork/core/presentation/widgets/widgets.dart';
+import 'package:fictional_spork/features/auth/auth.dart';
 import 'package:fictional_spork/features/create_test_entry/presentation/pages/pages.dart';
 import 'package:fictional_spork/features/home/home.dart';
 import 'package:fictional_spork/features/profile/presentation/presentation.dart';
@@ -29,6 +30,12 @@ class _HomePageState extends State<HomePage> {
             textStyle: Theme.of(context).textTheme.subtitle1,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => SessionHelper.logOut(),
+          ),
+        ],
       ),
       body: _buildBody(context),
       floatingActionButton: _buildFAB(context),

@@ -1,12 +1,32 @@
+import 'dart:async';
+
 import 'package:fictional_spork/features/splash/presentation/pages/pages.dart';
 import 'package:fictional_spork/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'core/core.dart';
 
-class App extends StatelessWidget {
+StreamController authStream = StreamController<bool>.broadcast();
+
+class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  @override
+  void initState() {
+    super.initState();
+    authStream.stream.listen((loggedOut) {
+      if (loggedOut) {
+        Phoenix.rebirth(context);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

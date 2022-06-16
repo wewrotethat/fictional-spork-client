@@ -1,9 +1,11 @@
 import 'package:fictional_spork/core/core.dart';
 import 'package:fictional_spork/features/auth/auth.dart';
+import 'package:fictional_spork/features/features.dart';
 import 'package:fictional_spork/features/phone_verification/presentation/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -31,7 +33,15 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: CustomAppBar(
+        title: Text(
+          'Fictional Spork - Login',
+          style: GoogleFonts.pacifico(
+            color: Theme.of(context).colorScheme.secondary,
+            textStyle: Theme.of(context).textTheme.subtitle1,
+          ),
+        ),
+      ),
       body: _buildBody(context),
     );
   }
@@ -166,7 +176,9 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
       Navigator.of(context).pushNamedAndRemoveUntil(
-          PhoneVerificationPage.routeName, ((route) => false));
+        HomePage.routeName,
+        ((route) => false),
+      );
     }
     if (state is LoginErrorState) {
       ScaffoldMessenger.of(context).showSnackBar(

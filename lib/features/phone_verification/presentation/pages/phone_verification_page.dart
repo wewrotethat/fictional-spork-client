@@ -1,5 +1,8 @@
 import 'package:fictional_spork/core/presentation/presentation.dart';
+import 'package:fictional_spork/features/phone_verification/presentation/blocs/blocs.dart';
+import 'package:fictional_spork/features/phone_verification/presentation/blocs/get_otp/get_otp.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -15,10 +18,14 @@ class PhoneVerificationPage extends StatefulWidget {
 
 class _LiteOtpState extends State<PhoneVerificationPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _otpController = TextEditingController();
+  TextEditingController _otpController = TextEditingController();
+
+  final _getOtpCubit = GetOtpCubit();
+  final _confirmOtpCubit = ConfirmOtpCubit();
 
   @override
   void initState() {
+    _confirmOtpCubit.stream.listen(_confirmOtpStateListener);
     super.initState();
   }
 
@@ -39,26 +46,41 @@ class _LiteOtpState extends State<PhoneVerificationPage> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(
-        20,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildForm(context),
-        ],
-      ),
-    );
+    return BlocBuilder<GetOtpCubit, GetOtpState>(
+        bloc: _getOtpCubit..getOtp(),
+        builder: (context, state) {
+          if (state is GetOtpSuccess) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(
+                20,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildForm(context),
+                ],
+              ),
+            );
+          } else if (state is GetOtpFailure) {
+            return CustomErrorWidget(onRetryPressed: () {
+              _getOtpCubit.getOtp();
+            });
+          }
+          return const Center(
+            child: CustomLoadingIndicator(),
+          );
+        });
   }
 
   Widget _buildForm(
     BuildContext context,
   ) {
+    _otpController = TextEditingController();
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
             children: [
@@ -67,15 +89,9 @@ class _LiteOtpState extends State<PhoneVerificationPage> {
                 text: TextSpan(
                   children: const [
                     TextSpan(
-                        text:
-                            'We have sent an SMS with a one time password to '),
-                    TextSpan(
-                      text: '+251 987654321',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      text: 'We have sent an SMS with a one time password '
+                          'to your phone number.\n',
                     ),
-                    TextSpan(text: '. '),
                     TextSpan(text: 'Please enter it below.'),
                   ],
                   style: TextStyle(
@@ -86,8 +102,16 @@ class _LiteOtpState extends State<PhoneVerificationPage> {
             ],
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
             child: const Text('Change Number'),
+          ),
+          TextButton(
+            onPressed: () {
+              _getOtpCubit.getOtp();
+            },
+            child: const Text('Resend OTP'),
           ),
           PinCodeTextField(
             appContext: context,
@@ -95,9 +119,12 @@ class _LiteOtpState extends State<PhoneVerificationPage> {
             autoFocus: true,
             controller: _otpController,
             keyboardType: TextInputType.number,
-            length: 5,
+            length: 4,
+            enabled: _confirmOtpCubit.state is! ConfirmOtpLoading,
             onChanged: (_) {},
-            onCompleted: (v) async {},
+            onCompleted: (_) {
+              _submit();
+            },
             pinTheme: PinTheme(
               activeColor: Theme.of(context).primaryColorDark,
               borderRadius: BorderRadius.circular(5),
@@ -117,16 +144,68 @@ class _LiteOtpState extends State<PhoneVerificationPage> {
           const SizedBox(
             height: 25,
           ),
-          ElevatedButton(
-            child: const Text('Next'),
-            onPressed: _submit,
-          ),
+          BlocBuilder<ConfirmOtpCubit, ConfirmOtpState>(
+              bloc: _confirmOtpCubit,
+              builder: (context, state) {
+                return ElevatedButton(
+                  child: Row(
+                    children: [
+                      if (state is ConfirmOtpLoading)
+                        const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 1,
+                          ),
+                        ),
+                      if (state is ConfirmOtpLoading)
+                        const SizedBox(
+                          width: 20,
+                        ),
+                      const Text('Next'),
+                    ],
+                  ),
+                  onPressed: state is! ConfirmOtpLoading ? _submit : null,
+                );
+              }),
         ],
       ),
     );
   }
 
+  void _confirmOtpStateListener(ConfirmOtpState state) {
+    if (state is ConfirmOtpSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'OTP confirmed successfully!',
+            style: GoogleFonts.pacifico(
+              color: Theme.of(context).colorScheme.secondary,
+              textStyle: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+        ),
+      );
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'OTP confirmation failed!',
+            style: GoogleFonts.pacifico(
+              color: Theme.of(context).colorScheme.secondary,
+              textStyle: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
   void _submit() {
-    if (_formKey.currentState!.validate()) {}
+    if (_formKey.currentState!.validate()) {
+      _confirmOtpCubit.verifyOtp(_otpController.text);
+    }
   }
 }
