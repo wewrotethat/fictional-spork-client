@@ -12,7 +12,9 @@ class AuthenticationIoc {
       )
       ..registerLazySingleton<AuthCheckRepo>(
         () => AuthCheckLocalRepo(),
-      );
+      )
+      ..registerLazySingleton<VerificationCheckRepo>(
+          () => VerificationCheckRemoteRepo());
   }
 
   static AuthenticationRepository get authRepo {
@@ -21,5 +23,9 @@ class AuthenticationIoc {
 
   static AuthCheckRepo get authCheckRepo {
     return _locator.get<AuthCheckRepo>();
+  }
+
+  static VerificationCheckRepo get verificationCheckRepo {
+    return _locator.get<VerificationCheckRepo>();
   }
 }

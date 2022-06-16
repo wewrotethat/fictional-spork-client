@@ -32,14 +32,15 @@ class UserRemoteRepository implements UserRepository {
   }
 
   @override
-  Future<Either<UserRepositoryFailure, User>> getUser(String id) async {
+  Future<Either<UserRepositoryFailure, User>> getUser() async {
     try {
+      final token = await TokenHelper.get();
       final response = await _httpHelper.get(
         headers: {
           'content-type': 'application/json',
-          'Authorization': TokenHelper.getToken(),
+          'Authorization': token,
         },
-        url: '$_baseUrl/users/$id',
+        url: '$_baseUrl/users/me',
       );
 
       if (response.isOk) {
@@ -54,17 +55,18 @@ class UserRemoteRepository implements UserRepository {
 
   @override
   Future<Either<UserRepositoryFailure, User>> updateUser(
-    String id,
     UpdateUserValueObject updateUserValueObject,
   ) async {
     try {
+      final token = await TokenHelper.get();
+
       final response = await _httpHelper.put(
         data: updateUserValueObject.toMap(),
         headers: {
           'content-type': 'application/json',
-          'Authorization': TokenHelper.getToken(),
+          'Authorization': token,
         },
-        url: '$_baseUrl/users/$id',
+        url: '$_baseUrl/users/me',
       );
 
       if (response.isOk) {

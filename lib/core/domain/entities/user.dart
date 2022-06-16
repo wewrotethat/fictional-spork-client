@@ -20,10 +20,13 @@ class User {
   final String medicalLicenseId;
   final String email;
   final String phoneNumber;
-  final String profileVerificationStatus;
+  final ProfileVerificationStatus profileVerificationStatus;
   final String profilePictureUrl;
-  final String phoneVerificationStatus;
+  final PhoneVerificationStatus phoneVerificationStatus;
   final List<String> deviceTokens;
   final DateTime createdAt;
   final DateTime updatedAt;
 }
+
+enum ProfileVerificationStatus { pending, verified, rejected }
+enum PhoneVerificationStatus { pending, verified, rejected }

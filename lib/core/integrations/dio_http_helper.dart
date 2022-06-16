@@ -61,6 +61,9 @@ class DioHttpHelper implements HttpHelper {
       final response = await _dio.get(
         url,
         queryParameters: params,
+        options: Options(
+          headers: headers,
+        ),
       );
       log(
         '${response.statusCode} $url',
@@ -133,6 +136,9 @@ class DioHttpHelper implements HttpHelper {
         url,
         data: data,
         queryParameters: params,
+        options: Options(
+          headers: headers,
+        ),
       );
 
       log(

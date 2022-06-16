@@ -19,6 +19,7 @@ dependencies:
   google_fonts: ^2.3.1
   hive: ^2.2.1
   hive_flutter: ^1.1.0
+  loading_indicator: ^3.0.3
   phone_form_field: ^5.0.3
   pin_code_fields: ^7.4.0
 

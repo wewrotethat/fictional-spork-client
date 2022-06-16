@@ -10,13 +10,45 @@ class UserMapper {
         medicalLicenseId: map['medicalLicenseId'],
         email: map['email'],
         phoneNumber: map['phoneNumber'],
-        profileVerificationStatus: map['profileVerificationStatus'],
+        profileVerificationStatus: profileVerificationStatusFromString(
+          map['profileVerificationStatus'],
+        ),
         profilePictureUrl: map['profilePictureUrl'],
-        phoneVerificationStatus: map['phoneVerificationStatus'],
+        phoneVerificationStatus: phoneVerificationStatusFromString(
+          map['phoneVerificationStatus'],
+        ),
         deviceTokens: List<String>.from(map['deviceTokens'].map((x) => x)),
         createdAt: DateTime.parse(map['createdAt']),
         updatedAt: DateTime.parse(map['updatedAt']),
       );
 
   static User userFromJson(String source) => userFromMap(json.decode(source));
+
+  static ProfileVerificationStatus profileVerificationStatusFromString(
+      String status) {
+    switch (status.toUpperCase()) {
+      case 'PENDING':
+        return ProfileVerificationStatus.pending;
+      case 'VERIFIED':
+        return ProfileVerificationStatus.verified;
+      case 'REJECTED':
+        return ProfileVerificationStatus.rejected;
+      default:
+        return ProfileVerificationStatus.pending;
+    }
+  }
+
+  static PhoneVerificationStatus phoneVerificationStatusFromString(
+      String status) {
+    switch (status.toUpperCase()) {
+      case 'PENDING':
+        return PhoneVerificationStatus.pending;
+      case 'VERIFIED':
+        return PhoneVerificationStatus.verified;
+      case 'REJECTED':
+        return PhoneVerificationStatus.rejected;
+      default:
+        return PhoneVerificationStatus.pending;
+    }
+  }
 }
