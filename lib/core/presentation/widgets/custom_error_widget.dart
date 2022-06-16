@@ -4,9 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 class CustomErrorWidget extends StatelessWidget {
   final VoidCallback onRetryPressed;
 
-  CustomErrorWidget({
+  const CustomErrorWidget({
+    Key? key,
     required this.onRetryPressed,
-  });
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(

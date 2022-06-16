@@ -47,7 +47,8 @@ class UserRemoteRepository implements UserRepository {
         final user = UserMapper.userFromMap(response.data);
         return right(user);
       }
-      return left(UserRepositoryFailure());
+      final errorResponse = ErrorResponse.fromMap(response.data);
+      return left(UserRepositoryFailure(error: errorResponse));
     } catch (e) {
       return left(UserRepositoryFailure());
     }
@@ -73,7 +74,8 @@ class UserRemoteRepository implements UserRepository {
         final user = UserMapper.userFromMap(response.data);
         return right(user);
       }
-      return left(UserRepositoryFailure());
+      final errorResponse = ErrorResponse.fromMap(response.data);
+      return left(UserRepositoryFailure(error: errorResponse));
     } catch (e) {
       return left(UserRepositoryFailure());
     }

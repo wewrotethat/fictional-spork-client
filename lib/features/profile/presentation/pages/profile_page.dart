@@ -1,5 +1,7 @@
-import 'package:fictional_spork/core/domain/entities/entities.dart';
+import 'package:fictional_spork/core/domain/domain.dart';
+import 'package:fictional_spork/core/extensions/extensions.dart';
 import 'package:fictional_spork/core/presentation/presentation.dart';
+import 'package:fictional_spork/features/phone_verification/phone_verification.dart';
 import 'package:fictional_spork/features/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,12 +20,13 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final _getProfileCubit = GetProfileCubit();
+  final _updateProfileCubit = UpdateProfileCubit();
 
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _medicalLicenseIdController = TextEditingController();
-  final _phoneController = PhoneController(null);
+  late PhoneController _phoneController;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -32,6 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     _getProfileCubit.stream.listen(_getProfileCubitListener);
+    _updateProfileCubit.stream.listen(_updateProfileCubitListener);
     super.initState();
   }
 
@@ -52,40 +56,53 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildBody() {
-    return BlocBuilder<GetProfileCubit, GetProfileState>(
-        builder: ((context, state) {
-      if (state is GetProfileSuccess) {
-        return _buildForm(state.user);
-      } else if (state is GetProfileFailure) {
-        return _buildErrorBody();
-      }
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: BlocBuilder<GetProfileCubit, GetProfileState>(
+        bloc: _getProfileCubit..getProfile(),
+        builder: (context, state) {
+          if (state is GetProfileSuccess) {
+            return _buildForm(state.user);
+          } else if (state is GetProfileFailure) {
+            return _buildErrorBody();
+          }
 
-      return const Center(
-        child: CustomLoadingIndicator(),
-      );
-    }));
+          return const Center(
+            child: CustomLoadingIndicator(),
+          );
+        },
+      ),
+    );
   }
 
   Widget _buildForm(User user) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          _buildFirstNameField(context),
-          _buildSpacer(context),
-          _buildLastNameField(context),
-          _buildSpacer(context),
-          _buildEmailField(context),
-          _buildSpacer(context),
-          _buildMedicalLicenseIdField(context),
-          _buildSpacer(context),
-          _buildPhoneField(context),
-          const SizedBox(
-            height: 30,
-          ),
-          _buildSignUpButton(context),
-          _buildSpacer(context),
-        ],
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
+      ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            _buildFirstNameField(context),
+            _buildSpacer(context),
+            _buildLastNameField(context),
+            _buildSpacer(context),
+            _buildEmailField(context),
+            _buildSpacer(context),
+            _buildMedicalLicenseIdField(context),
+            _buildSpacer(context),
+            _buildPhoneField(context, user),
+            if (user.phoneVerificationStatus !=
+                PhoneVerificationStatus.verified)
+              _buildVerifyPhoneButton(),
+            const SizedBox(
+              height: 30,
+            ),
+            _buildUpdateButton(context),
+            _buildSpacer(context),
+          ],
+        ),
       ),
     );
   }
@@ -145,10 +162,10 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildPhoneField(BuildContext context) {
+  Widget _buildPhoneField(BuildContext context, User user) {
     return PhoneFormField(
       autofillHints: const [AutofillHints.telephoneNumber],
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: AutovalidateMode.always,
       controller: _phoneController,
       countryCodeStyle: Theme.of(context).textTheme.subtitle1,
       countrySelectorNavigator: _selectorNavigator,
@@ -158,9 +175,20 @@ class _ProfilePageState extends State<ProfilePage> {
         labelText: 'Phone Number',
         hintText: 'Phone Number',
       ),
+      enabled: user.phoneVerificationStatus != PhoneVerificationStatus.verified,
       showFlagInInput: true,
       textDirection: TextDirection.ltr,
       validator: _getValidator(),
+    );
+  }
+
+  Widget _buildVerifyPhoneButton() {
+    return TextButton(
+      onPressed: () =>
+          Navigator.of(context).pushNamed(PhoneVerificationPage.routeName),
+      child: const Text(
+        'Verify Phone Number',
+      ),
     );
   }
 
@@ -190,12 +218,12 @@ class _ProfilePageState extends State<ProfilePage> {
     return validators.isNotEmpty ? PhoneValidator.compose(validators) : null;
   }
 
-  Widget _buildSignUpButton(BuildContext context) {
-    return BlocBuilder<SignUpCubit, SignUpState>(
-      bloc: _signUpCubit,
+  Widget _buildUpdateButton(BuildContext context) {
+    return BlocBuilder<UpdateProfileCubit, UpdateProfileState>(
+      bloc: _updateProfileCubit,
       builder: (context, state) {
         return ElevatedButton(
-          onPressed: state is SignUpProgressState ? null : _onSubmit,
+          onPressed: state is UpdateProfileInProgress ? null : _onSubmit,
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(
               Theme.of(context).colorScheme.secondary,
@@ -207,7 +235,7 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (state is SignUpProgressState)
+              if (state is UpdateProfileInProgress)
                 const SizedBox(
                   height: 20,
                   width: 20,
@@ -216,11 +244,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     strokeWidth: 1,
                   ),
                 ),
-              if (state is SignUpProgressState)
+              if (state is UpdateProfileInProgress)
                 const SizedBox(
                   width: 20,
                 ),
-              const Text('Sign up'),
+              const Text('Update'),
             ],
           ),
         );
@@ -230,32 +258,32 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _onSubmit() {
     if (_formKey.currentState?.validate() ?? false) {
-      final createUserValueObject = CreateUserValueObject(
-          firstName: _firstNameController.text,
-          lastName: _lastNameController.text,
-          email: _emailController.text,
-          password: _passwordController.text,
-          medicalLicenseId: _medicalLicenseIdController.text,
-          phoneNumber: _phoneController.value!.international);
-      _signUpCubit.signUp(createUserValueObject);
+      final updateUserValueObject = UpdateUserValueObject(
+        firstName: _firstNameController.text,
+        lastName: _lastNameController.text,
+        email: _emailController.text,
+        medicalLicenseId: _medicalLicenseIdController.text,
+        phoneNumber: _phoneController.value!.international,
+      );
+      _updateProfileCubit.updateProfile(updateUserValueObject);
     }
   }
 
-  void _signUpStateListener(SignUpState state) {
-    if (state is SignUpCompletedState) {
+  void _updateProfileCubitListener(UpdateProfileState state) {
+    if (state is UpdateProfileSuccess) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Sign up successful!',
+            'Update successful!',
           ),
         ),
       );
-      Navigator.of(context).pushNamed(LoginPage.routeName);
+      _getProfileCubit.getProfile();
     }
-    if (state is SignUpErrorState) {
+    if (state is UpdateProfileFailure) {
       late String message;
       if (state.error == null) {
-        message = 'An error occurred while trying to sign you up!';
+        message = 'An error occurred while trying to update your profile!';
       } else if (state.error!.error != null) {
         message = state.error!.error!.capitalize();
       } else if (state.error!.validationErrors != null) {
@@ -281,7 +309,7 @@ class _ProfilePageState extends State<ProfilePage> {
       _lastNameController.text = user.lastName;
       _emailController.text = user.email;
       _medicalLicenseIdController.text = user.medicalLicenseId;
-      _phoneController.value = PhoneNumber.fromRaw(user.phoneNumber);
+      _phoneController = PhoneController(PhoneNumber.fromRaw(user.phoneNumber));
     }
   }
 

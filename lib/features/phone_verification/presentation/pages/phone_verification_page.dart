@@ -1,5 +1,6 @@
 import 'package:fictional_spork/core/presentation/presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class PhoneVerificationPage extends StatefulWidget {
@@ -24,7 +25,15 @@ class _LiteOtpState extends State<PhoneVerificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: CustomAppBar(
+        title: Text(
+          'Fictional Spork - Phone Verification',
+          style: GoogleFonts.pacifico(
+            color: Theme.of(context).colorScheme.secondary,
+            textStyle: Theme.of(context).textTheme.subtitle1,
+          ),
+        ),
+      ),
       body: _buildBody(context),
     );
   }
