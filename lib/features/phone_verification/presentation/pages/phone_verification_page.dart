@@ -149,6 +149,7 @@ class _LiteOtpState extends State<PhoneVerificationPage> {
               builder: (context, state) {
                 return ElevatedButton(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (state is ConfirmOtpLoading)
                         const SizedBox(
@@ -177,26 +178,18 @@ class _LiteOtpState extends State<PhoneVerificationPage> {
   void _confirmOtpStateListener(ConfirmOtpState state) {
     if (state is ConfirmOtpSuccess) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(
             'OTP confirmed successfully!',
-            style: GoogleFonts.pacifico(
-              color: Theme.of(context).colorScheme.secondary,
-              textStyle: Theme.of(context).textTheme.subtitle1,
-            ),
           ),
         ),
       );
       Navigator.of(context).pop();
-    } else {
+    } else if (state is ConfirmOtpFailure) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(
             'OTP confirmation failed!',
-            style: GoogleFonts.pacifico(
-              color: Theme.of(context).colorScheme.secondary,
-              textStyle: Theme.of(context).textTheme.subtitle1,
-            ),
           ),
         ),
       );
