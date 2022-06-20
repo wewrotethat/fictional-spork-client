@@ -36,6 +36,11 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.logout),
             onPressed: () => SessionHelper.logOut(),
           ),
+          IconButton(
+            icon: const Icon(Icons.person_outline),
+            onPressed: () =>
+                Navigator.of(context).pushNamed(ProfilePage.routeName),
+          ),
         ],
       ),
       body: _buildBody(context),
