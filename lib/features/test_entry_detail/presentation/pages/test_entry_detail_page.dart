@@ -50,9 +50,11 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
                 _buildSpacer(context, height: 20),
                 _buildSpecimenInfo(context, state.labTestEntry),
                 _buildSpacer(context, height: 20),
-                if (state.labTestEntry.status != 'pending')
-                  _buildSpecimenData(context),
-                if (state.labTestEntry.status == 'pending')
+                if (state.labTestEntry.bloodSmearImageUrl != null)
+                  _buildSpecimenData(
+                      context, state.labTestEntry.bloodSmearImageUrl!),
+                if (state.labTestEntry.status == 'pending' &&
+                    state.labTestEntry.bloodSmearImageUrl == null)
                   _buildUploadCard(context),
                 if (state.labTestEntry.status == 'ready')
                   _buildResultCard(context)
@@ -184,7 +186,7 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
     );
   }
 
-  Widget _buildSpecimenData(BuildContext context) {
+  Widget _buildSpecimenData(BuildContext context, String bloodSmearImageUrl) {
     return CustomCard(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -205,9 +207,24 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
             value: 'Jan. 12, 2000',
           ),
           _buildSpacer(context),
-          _buildViewSpecimenButton(context),
+          _buildViewSpecimenButton(context, bloodSmearImageUrl),
+          _buildReUploadButton(context),
         ],
       ),
+    );
+  }
+
+  Widget _buildReUploadButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: uploadImage,
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
+        minimumSize: MaterialStateProperty.all(
+          const Size(double.infinity, 40),
+        ),
+      ),
+      child: const Text('Change Specimen Image'),
     );
   }
 
@@ -274,7 +291,7 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
 
   Widget _buildUploadButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: uploadImage,
       style: ButtonStyle(
         minimumSize: MaterialStateProperty.all(
           const Size(double.infinity, 40),
@@ -284,12 +301,19 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
     );
   }
 
-  Widget _buildViewSpecimenButton(BuildContext context) {
+  void uploadImage() async {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => ImageSourcePicker(
+          id: widget.id,
+          onUpload: () => _getTestEntryCubit.getLabTestEntry(widget.id)),
+    );
+  }
+
+  Widget _buildViewSpecimenButton(
+      BuildContext context, String bloodSmearImageUrl) {
     return TextButton(
-      onPressed: () => _showImageSheet(
-        context,
-        specimenOnly: true,
-      ),
+      onPressed: () => _showImageSheet(context, bloodSmearImageUrl),
       style: ButtonStyle(
         minimumSize: MaterialStateProperty.all(
           const Size(double.infinity, 40),
@@ -300,8 +324,9 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
   }
 
   Widget _buildViewSegmentedSpecimenButton(BuildContext context) {
+    //TODO:
     return TextButton(
-      onPressed: () => _showImageSheet(context),
+      onPressed: () => _showImageSheet(context, ''),
       style: ButtonStyle(
         minimumSize: MaterialStateProperty.all(
           const Size(double.infinity, 40),
@@ -311,14 +336,12 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
     );
   }
 
-  Future<void> _showImageSheet(BuildContext context,
-      {bool specimenOnly = false}) {
+  Future<void> _showImageSheet(BuildContext context, String imageUrl) {
     return showModalBottomSheet(
       context: context,
       builder: (context) {
         return ImagePreview(
-          specimenOnly: specimenOnly,
-          testStatus: TestStatus.pending,
+          imageUrl: imageUrl,
         );
       },
     );
