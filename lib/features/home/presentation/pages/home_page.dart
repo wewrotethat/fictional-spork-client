@@ -142,6 +142,7 @@ class _HomePageState extends State<HomePage> {
                   labTestEntry: state.testEntries[index],
                 );
               },
+              itemCount: state.testEntries.length,
             ),
           );
         } else if (state is GetTestEntriesError) {

@@ -8,10 +8,9 @@ class Routes {
         LoginPage.routeName: (context) => const LoginPage(),
         SignUpPage.routeName: (context) => const SignUpPage(),
         TestEntryDetailPage.routeName: (context) {
-          final testStatus =
-              ModalRoute.of(context)?.settings.arguments as TestStatus;
+          final id = ModalRoute.of(context)?.settings.arguments as String;
           return TestEntryDetailPage(
-            testStatus: testStatus,
+            id: id,
           );
         },
         WelcomePage.routeName: (context) => const WelcomePage(),

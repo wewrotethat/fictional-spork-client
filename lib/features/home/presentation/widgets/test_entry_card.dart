@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:fictional_spork/core/core.dart';
-import 'package:fictional_spork/features/home/domain/domain.dart';
 import 'package:fictional_spork/features/test_entry_detail/presentation/pages/pages.dart';
+import 'package:intl/intl.dart';
 
 class TestEntryCard extends StatelessWidget {
   const TestEntryCard({
@@ -19,6 +19,7 @@ class TestEntryCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(
           TestEntryDetailPage.routeName,
+          arguments: labTestEntry.id,
         );
       },
       child: _buildContent(context),
@@ -34,13 +35,13 @@ class TestEntryCard extends StatelessWidget {
             children: [
               _buildProperty(
                 context,
-                label: 'Patient Name',
-                value: 'John Doe',
+                label: 'Patient ',
+                value: _getName(),
               ),
               _buildProperty(
                 context,
                 label: 'Submitted on',
-                value: 'Jan 12',
+                value: DateFormat.yMMMM().format(labTestEntry.createdAt),
               )
             ],
           ),
@@ -52,7 +53,7 @@ class TestEntryCard extends StatelessWidget {
               _buildProperty(
                 context,
                 label: 'Sample ID',
-                value: '...ef23a',
+                value: labTestEntry.id.substring(0, 8),
               ),
               _buildProperty(
                 context,
@@ -74,6 +75,8 @@ class TestEntryCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: RichText(
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         text: TextSpan(
           style: Theme.of(context).textTheme.bodyText1,
           children: [
@@ -98,6 +101,15 @@ class TestEntryCard extends StatelessWidget {
       case 'pending':
       default:
         return Theme.of(context).backgroundColor;
+    }
+  }
+
+  String _getName() {
+    if (labTestEntry.patientInfo != null) {
+      return '${labTestEntry.patientInfo!.firstName} '
+          '${labTestEntry.patientInfo!.lastName}';
+    } else {
+      return 'Unknown';
     }
   }
 }

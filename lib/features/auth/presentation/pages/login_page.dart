@@ -1,7 +1,6 @@
 import 'package:fictional_spork/core/core.dart';
 import 'package:fictional_spork/features/auth/auth.dart';
-import 'package:fictional_spork/features/features.dart';
-import 'package:fictional_spork/features/phone_verification/presentation/pages/pages.dart';
+import 'package:fictional_spork/features/home/presentation/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';

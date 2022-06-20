@@ -2,6 +2,7 @@ import 'package:fictional_spork/core/core.dart';
 
 class LabTestEntry {
   LabTestEntry({
+    required this.id,
     this.bloodSmearImageUrl,
     required this.patientId,
     required this.technicianId,
@@ -12,6 +13,7 @@ class LabTestEntry {
     required this.status,
   });
 
+  final String id;
   final String? bloodSmearImageUrl;
   final String patientId;
   final String technicianId;

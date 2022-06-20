@@ -4,6 +4,7 @@ import 'package:fictional_spork/core/domain/domain.dart';
 class LabTestEntryMapper {
   static LabTestEntry labTestEntryFromMap(Map<String, dynamic> map) {
     return LabTestEntry(
+      id: map['id'],
       bloodSmearImageUrl: map['bloodSmearImageUrl'],
       patientId: map['patientId'],
       technicianId: map['technicianId'],

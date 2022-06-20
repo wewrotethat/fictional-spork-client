@@ -3,60 +3,96 @@ import 'package:flutter/material.dart';
 
 import 'package:fictional_spork/core/core.dart';
 import 'package:fictional_spork/features/home/domain/domain.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
-class TestEntryDetailPage extends StatelessWidget {
+class TestEntryDetailPage extends StatefulWidget {
   const TestEntryDetailPage({
     Key? key,
-    required this.testStatus,
+    required this.id,
   }) : super(key: key);
 
   static const routeName = '/test-entry-detail';
 
-  final TestStatus testStatus;
+  final String id;
 
+  @override
+  State<TestEntryDetailPage> createState() => _TestEntryDetailPageState();
+}
+
+class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
+  final _getTestEntryCubit = GetLabTestEntryCubit();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        actions: [
-          if (testStatus == TestStatus.pending)
-            const Padding(
-              padding: EdgeInsets.all(5.0),
-              child: CustomIconButton(
-                icon: Icon(Icons.check),
-                backgroundColor: Colors.transparent,
-              ),
-            )
-        ],
-      ),
+      appBar: const CustomAppBar(),
       body: _buildBody(context),
     );
   }
 
   Widget _buildBody(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: _buildContent(context),
-      ),
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: _buildContent(context),
     );
   }
 
   Widget _buildContent(BuildContext context) {
-    return Column(
-      children: [
-        _buildPatientInfoCard(context),
-        _buildSpacer(context, height: 20),
-        _buildSpecimenInfo(context),
-        _buildSpacer(context, height: 20),
-        if (testStatus != TestStatus.pending) _buildSpecimenData(context),
-        if (testStatus == TestStatus.pending) _buildUploadCard(context),
-        if (testStatus == TestStatus.resultReady) _buildResultCard(context)
-      ],
+    return BlocBuilder<GetLabTestEntryCubit, GetLabTestEntryState>(
+      bloc: _getTestEntryCubit..getLabTestEntry(widget.id),
+      builder: (context, state) {
+        if (state is GetLabTestEntrySuccess) {
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildPatientInfoCard(context, state.labTestEntry.patientInfo),
+                _buildSpacer(context, height: 20),
+                _buildSpecimenInfo(context, state.labTestEntry),
+                _buildSpacer(context, height: 20),
+                if (state.labTestEntry.status != 'pending')
+                  _buildSpecimenData(context),
+                if (state.labTestEntry.status == 'pending')
+                  _buildUploadCard(context),
+                if (state.labTestEntry.status == 'ready')
+                  _buildResultCard(context)
+              ],
+            ),
+          );
+        } else if (state is GetLabTestEntryFailure) {
+          return CustomErrorWidget(
+            onRetryPressed: () {
+              _getTestEntryCubit.getLabTestEntry(widget.id);
+            },
+          );
+        }
+        return const Center(
+          child: CustomLoadingIndicator(),
+        );
+      },
     );
   }
 
-  Widget _buildPatientInfoCard(BuildContext context) {
+  Widget _buildPatientInfoCard(BuildContext context, ProfileInfo? patientInfo) {
+    if (patientInfo == null) {
+      return CustomCard(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            SizedBox(
+              width: double.infinity,
+            ),
+            Text(
+              'No patient info found',
+              style: GoogleFonts.abel(
+                color: Theme.of(context).colorScheme.secondary,
+                textStyle: Theme.of(context).textTheme.subtitle1,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
     return CustomCard(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -100,7 +136,7 @@ class TestEntryDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSpecimenInfo(BuildContext context) {
+  Widget _buildSpecimenInfo(BuildContext context, LabTestEntry labTestEntry) {
     return CustomCard(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -118,30 +154,31 @@ class TestEntryDetailPage extends StatelessWidget {
           _buildPropertyField(
             context,
             label: 'Specimen ID',
-            value: '12345678',
+            value: labTestEntry.id,
           ),
           _buildSpacer(context),
           _buildPropertyField(
             context,
             label: 'Created on',
-            value: 'Jan. 12, 2000',
+            value: DateFormat.yMMMMd().format(labTestEntry.createdAt),
           ),
           _buildSpacer(context),
           _buildPropertyField(
             context,
             label: 'Created at',
-            value: '4:20 AM',
+            value: DateFormat.Hms().format(labTestEntry.createdAt),
           ),
           _buildSpacer(context),
           _buildPropertyField(
             context,
             label: 'Status',
-            value: getTestStatusName(testStatus),
+            value: labTestEntry.status.capitalize(),
           ),
-          TextButton(
-            onPressed: () {},
-            child: const Text('Start diagnosis'),
-          )
+          if (labTestEntry.bloodSmearImageUrl != null)
+            TextButton(
+              onPressed: () {},
+              child: const Text('Start diagnosis'),
+            )
         ],
       ),
     );
@@ -281,7 +318,7 @@ class TestEntryDetailPage extends StatelessWidget {
       builder: (context) {
         return ImagePreview(
           specimenOnly: specimenOnly,
-          testStatus: testStatus,
+          testStatus: TestStatus.pending,
         );
       },
     );
