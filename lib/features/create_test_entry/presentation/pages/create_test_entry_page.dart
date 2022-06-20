@@ -1,6 +1,4 @@
 import 'package:fictional_spork/core/core.dart';
-import 'package:fictional_spork/features/create_test_entry/create_test_entry.dart';
-import 'package:fictional_spork/features/create_test_entry/domain/repositories/create_test_entry_repo.dart';
 import 'package:fictional_spork/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
