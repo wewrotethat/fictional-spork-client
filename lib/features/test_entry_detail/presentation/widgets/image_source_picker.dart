@@ -106,8 +106,11 @@ class _ImageSourcePickerState extends State<ImageSourcePicker> {
           } else {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Asking for Permission..."),
+              children: const [
+                SizedBox(
+                  width: double.infinity,
+                ),
+                Text("Asking for Permission..."),
               ],
             );
           }

@@ -135,14 +135,17 @@ class _HomePageState extends State<HomePage> {
         if (state is GetTestEntriesLoaded) {
           return Padding(
             padding: const EdgeInsets.all(20),
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return _buildEntryCard(
-                  context,
-                  labTestEntry: state.testEntries[index],
-                );
-              },
-              itemCount: state.testEntries.length,
+            child: RefreshIndicator(
+              onRefresh: () => _getTestEntriesCubit.get(),
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return _buildEntryCard(
+                    context,
+                    labTestEntry: state.testEntries[index],
+                  );
+                },
+                itemCount: state.testEntries.length,
+              ),
             ),
           );
         } else if (state is GetTestEntriesError) {

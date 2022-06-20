@@ -2,8 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fictional_spork/core/core.dart';
 import 'package:flutter/material.dart';
 
-import 'package:fictional_spork/features/home/domain/value_objects/test_status.dart';
-
 class ImagePreview extends StatelessWidget {
   const ImagePreview({
     Key? key,

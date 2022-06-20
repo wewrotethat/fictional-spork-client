@@ -2,7 +2,6 @@ import 'package:fictional_spork/features/test_entry_detail/presentation/presenta
 import 'package:flutter/material.dart';
 
 import 'package:fictional_spork/core/core.dart';
-import 'package:fictional_spork/features/home/domain/domain.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -81,7 +80,7 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               width: double.infinity,
             ),
             Text(
