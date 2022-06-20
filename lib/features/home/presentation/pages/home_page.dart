@@ -18,6 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _verificationCheckCubit = VerificationCheckCubit();
+  final _getTestEntriesCubit = GetTestEntriesCubit();
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +44,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildFAB(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () {
-        Navigator.of(context).pushNamed(CreateTestEntryPage.routeName);
+    return BlocBuilder<VerificationCheckCubit, VerificationCheckState>(
+      bloc: _verificationCheckCubit,
+      builder: (context, state) {
+        if (state is VerificationCheckedState) {
+          if (state.status == ProfileVerificationStatus.verified) {
+            return FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(CreateTestEntryPage.routeName);
+              },
+              child: const Icon(
+                Icons.add,
+              ),
+            );
+          }
+        }
+        return const SizedBox.shrink();
       },
-      child: const Icon(
-        Icons.add,
-      ),
     );
   }
 
@@ -84,7 +95,7 @@ class _HomePageState extends State<HomePage> {
             width: double.infinity,
           ),
           Text(
-            'You are not verified yet',
+            'Your profile is not verified yet',
             style: GoogleFonts.pacifico(
               color: Theme.of(context).colorScheme.primary,
               textStyle: Theme.of(context).textTheme.headline6,
@@ -95,8 +106,8 @@ class _HomePageState extends State<HomePage> {
           ),
           Text(
             'Please make sure that you have verified your phone number and '
-            'inputted the correct personal and medical license number. '
-            'Your profile will be resubmitted for review once you '
+            'inputted the correct personal info and medical license number. '
+            'Your profile will be considered for review once you '
             'update your info',
             style: GoogleFonts.abel(
               color: Theme.of(context).colorScheme.secondary,
@@ -118,15 +129,30 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildVerifiedBody(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: ListView(
-        children: [
-          _buildEntryCard(context, testStatus: TestStatus.resultReady),
-          _buildEntryCard(context, testStatus: TestStatus.queued),
-          _buildEntryCard(context, testStatus: TestStatus.pending),
-        ],
-      ),
+    return BlocBuilder<GetTestEntriesCubit, GetTestEntriesState>(
+      bloc: _getTestEntriesCubit..get(),
+      builder: (context, state) {
+        if (state is GetTestEntriesLoaded) {
+          return Padding(
+            padding: const EdgeInsets.all(20),
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                return _buildEntryCard(
+                  context,
+                  labTestEntry: state.testEntries[index],
+                );
+              },
+            ),
+          );
+        } else if (state is GetTestEntriesError) {
+          return CustomErrorWidget(
+            onRetryPressed: () => _getTestEntriesCubit.get(),
+          );
+        }
+        return const Center(
+          child: CustomLoadingIndicator(),
+        );
+      },
     );
   }
 
@@ -140,10 +166,10 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildEntryCard(
     BuildContext context, {
-    required TestStatus testStatus,
+    required LabTestEntry labTestEntry,
   }) {
     return TestEntryCard(
-      testStatus: testStatus,
+      labTestEntry: labTestEntry,
     );
   }
 }

@@ -1,15 +1,15 @@
-import 'package:fictional_spork/core/core.dart';
-import 'package:fictional_spork/features/test_entry_detail/presentation/pages/pages.dart';
 import 'package:flutter/material.dart';
 
+import 'package:fictional_spork/core/core.dart';
 import 'package:fictional_spork/features/home/domain/domain.dart';
+import 'package:fictional_spork/features/test_entry_detail/presentation/pages/pages.dart';
 
 class TestEntryCard extends StatelessWidget {
   const TestEntryCard({
     Key? key,
-    required this.testStatus,
+    required this.labTestEntry,
   }) : super(key: key);
-  final TestStatus testStatus;
+  final LabTestEntry labTestEntry;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,6 @@ class TestEntryCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(
           TestEntryDetailPage.routeName,
-          arguments: testStatus,
         );
       },
       child: _buildContent(context),
@@ -58,7 +57,7 @@ class TestEntryCard extends StatelessWidget {
               _buildProperty(
                 context,
                 label: 'Status',
-                value: getTestStatusName(testStatus),
+                value: labTestEntry.status.capitalize(),
               ),
             ],
           ),
@@ -92,11 +91,12 @@ class TestEntryCard extends StatelessWidget {
   }
 
   Color? _getBackgroundColor(BuildContext context) {
-    switch (testStatus) {
-      case TestStatus.resultReady:
+    switch (labTestEntry.status.toLowerCase()) {
+      case 'ready':
         return Theme.of(context).primaryColorLight;
-      case TestStatus.queued:
-      case TestStatus.pending:
+      case 'queued':
+      case 'pending':
+      default:
         return Theme.of(context).backgroundColor;
     }
   }
