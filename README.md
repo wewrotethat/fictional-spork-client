@@ -13,5 +13,5 @@ In order to run the app
     },
 ```
 - follow firebase's initialization instructions to configure the app with proper settings (some files are gitignored because they have api keys) [link](https://firebase.google.com/docs/flutter/setup)
-- run the app
+- use vs code's run option which will run the app using `flutter run --dart-define API_BASE_URL=$PATH/api`
 
