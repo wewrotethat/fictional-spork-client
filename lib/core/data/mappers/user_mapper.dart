@@ -13,7 +13,7 @@ class UserMapper {
         profileVerificationStatus: profileVerificationStatusFromString(
           map['profileVerificationStatus'],
         ),
-        profilePictureUrl: map['profilePictureUrl'],
+        profilePictureUrl: map['profilePictureUrl'] ?? '',
         phoneVerificationStatus: phoneVerificationStatusFromString(
           map['phoneVerificationStatus'],
         ),

@@ -51,12 +51,14 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
                 _buildSpacer(context, height: 20),
                 if (state.labTestEntry.bloodSmearImageUrl != null)
                   _buildSpecimenData(
-                      context, state.labTestEntry.bloodSmearImageUrl!),
+                      context,
+                      state.labTestEntry.bloodSmearImageUrl!,
+                      state.labTestEntry.status),
                 if (state.labTestEntry.status == 'pending' &&
                     state.labTestEntry.bloodSmearImageUrl == null)
                   _buildUploadCard(context),
                 if (state.labTestEntry.status == 'ready')
-                  _buildResultCard(context)
+                  _buildResultCard(context, state.labTestEntry),
               ],
             ),
           );
@@ -185,7 +187,8 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
     );
   }
 
-  Widget _buildSpecimenData(BuildContext context, String bloodSmearImageUrl) {
+  Widget _buildSpecimenData(
+      BuildContext context, String bloodSmearImageUrl, String status) {
     return CustomCard(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -207,7 +210,7 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
           ),
           _buildSpacer(context),
           _buildViewSpecimenButton(context, bloodSmearImageUrl),
-          _buildReUploadButton(context),
+          if (status != 'ready') _buildReUploadButton(context),
         ],
       ),
     );
@@ -254,7 +257,7 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
     );
   }
 
-  Widget _buildResultCard(BuildContext context) {
+  Widget _buildResultCard(BuildContext context, LabTestEntry labTestEntry) {
     return CustomCard(
       borderColor: Theme.of(context).colorScheme.secondary,
       padding: const EdgeInsets.all(20),
@@ -273,16 +276,15 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
           _buildPropertyField(
             context,
             label: 'Result',
-            value: 'Positive',
+            value: labTestEntry.result?.status ?? 'N/A',
           ),
           _buildSpacer(context),
           _buildPropertyField(
             context,
             label: 'Stage',
-            value: 'V',
+            value: labTestEntry.result!.stage ?? 'N/A',
           ),
           _buildSpacer(context),
-          _buildViewSegmentedSpecimenButton(context),
         ],
       ),
     );
@@ -319,19 +321,6 @@ class _TestEntryDetailPageState extends State<TestEntryDetailPage> {
         ),
       ),
       child: const Text('View Specimen Image'),
-    );
-  }
-
-  Widget _buildViewSegmentedSpecimenButton(BuildContext context) {
-    //TODO:
-    return TextButton(
-      onPressed: () => _showImageSheet(context, ''),
-      style: ButtonStyle(
-        minimumSize: MaterialStateProperty.all(
-          const Size(double.infinity, 40),
-        ),
-      ),
-      child: const Text('View Segmented Specimen Image'),
     );
   }
 

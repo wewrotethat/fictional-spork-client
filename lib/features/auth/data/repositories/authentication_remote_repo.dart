@@ -3,6 +3,7 @@ import 'package:fictional_spork/core/constants/constants.dart';
 import 'package:fictional_spork/core/ioc/ioc.dart';
 import 'package:fictional_spork/features/auth/data/mappers/mappers.dart';
 import 'package:fictional_spork/features/auth/domain/domain.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class AuthenticationRemoteRepo implements AuthenticationRepository {
   static const _baseUrl = String.fromEnvironment('API_BASE_URL');
@@ -13,9 +14,11 @@ class AuthenticationRemoteRepo implements AuthenticationRepository {
       authenticate(
     AuthenticationValueObject authenticationValueObject,
   ) async {
+    final authInfo = authenticationValueObject.toMap();
+    authInfo['deviceToken'] = await FirebaseMessaging.instance.getToken();
     try {
       final response = await _httpHelper.post(
-        data: authenticationValueObject.toMap(),
+        data: authInfo,
         headers: {
           'content-type': 'application/json',
         },

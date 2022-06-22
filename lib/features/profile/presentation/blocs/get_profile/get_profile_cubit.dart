@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class GetProfileCubit extends Cubit<GetProfileState> {
   GetProfileCubit() : super(GetProfileInitial());
 
-  Future<void> getProfile() async {
+  Future<void> get() async {
     emit(GetProfileLoading());
     try {
       final result = await CoreFeaturesIoc.userRepo.getUser();

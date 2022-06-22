@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "939998034138",
+    "project_id": "fictional-spork",
+    "storage_bucket": "fictional-spork.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:939998034138:android:6d73b6e0b7dfc9734a0de3",
+        "android_client_info": {
+          "package_name": "com.example.fictional_spork"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "939998034138-flhukouv967ogmpvgrsmm69hetofaeum.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtE8lXplnT-F75zlJ_12x2AHOhfkGcZLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "939998034138-flhukouv967ogmpvgrsmm69hetofaeum.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

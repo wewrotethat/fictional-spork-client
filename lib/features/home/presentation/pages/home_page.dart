@@ -141,7 +141,10 @@ class _HomePageState extends State<HomePage> {
           return Padding(
             padding: const EdgeInsets.all(20),
             child: RefreshIndicator(
-              onRefresh: () => _getTestEntriesCubit.get(),
+              onRefresh: () async {
+                _verificationCheckCubit.check();
+                _getTestEntriesCubit.get();
+              },
               child: ListView.builder(
                 itemBuilder: (context, index) {
                   return _buildEntryCard(
@@ -155,7 +158,10 @@ class _HomePageState extends State<HomePage> {
           );
         } else if (state is GetTestEntriesError) {
           return CustomErrorWidget(
-            onRetryPressed: () => _getTestEntriesCubit.get(),
+            onRetryPressed: () {
+              _verificationCheckCubit.check();
+              _getTestEntriesCubit.get();
+            },
           );
         }
         return const Center(

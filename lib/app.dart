@@ -21,11 +21,19 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
     authStream.stream.listen((loggedOut) {
       if (loggedOut) {
-        Phoenix.rebirth(context);
+        Future.delayed(
+          Duration.zero,
+          () => Phoenix.rebirth(context),
+        );
       }
     });
+    super.didChangeDependencies();
   }
 
   @override

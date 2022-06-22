@@ -59,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: BlocBuilder<GetProfileCubit, GetProfileState>(
-        bloc: _getProfileCubit..getProfile(),
+        bloc: _getProfileCubit..get(),
         builder: (context, state) {
           if (state is GetProfileSuccess) {
             return _buildForm(state.user);
@@ -184,8 +184,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildVerifyPhoneButton() {
     return TextButton(
-      onPressed: () =>
-          Navigator.of(context).pushNamed(PhoneVerificationPage.routeName),
+      onPressed: () async {
+        await Navigator.of(context).pushNamed(PhoneVerificationPage.routeName);
+        _getProfileCubit.get();
+      },
       child: const Text(
         'Verify Phone Number',
       ),
@@ -278,7 +280,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       );
-      _getProfileCubit.getProfile();
+      _getProfileCubit.get();
     }
     if (state is UpdateProfileFailure) {
       late String message;
@@ -315,7 +317,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildErrorBody() {
     return CustomErrorWidget(onRetryPressed: () {
-      _getProfileCubit.getProfile();
+      _getProfileCubit.get();
     });
   }
 }

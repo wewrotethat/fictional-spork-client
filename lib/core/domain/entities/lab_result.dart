@@ -9,9 +9,9 @@ class LabResult {
   });
 
   final String status;
-  final String stage;
-  final String segmentedImageUrl;
-  final Map<String, dynamic> extra;
+  final String? stage;
+  final String? segmentedImageUrl;
+  final Map<String, dynamic>? extra;
   final DateTime createdAt;
   final DateTime updatedAt;
 }

@@ -7,8 +7,8 @@ class LabResultMapper {
       stage: map['stage'],
       segmentedImageUrl: map['segmentedImageUrl'],
       extra: map['extra'],
-      createdAt: map['createdAt'],
-      updatedAt: map['updatedAt'],
+      createdAt: DateTime.parse(map['createdAt']),
+      updatedAt: DateTime.parse(map['updatedAt']),
     );
   }
 }
