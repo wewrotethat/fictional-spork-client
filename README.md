@@ -1,16 +1,17 @@
 # fictional_spork
 
-A new Flutter project.
+In order to run the app
+- add the following block to launch.json in vscode, replace PATH with the current api path
+``` {
+        "name": "fictional-spork-client",
+        "request": "launch",
+        "type": "dart",
+        "args": [
+            "--dart-define",
+           "API_BASE_URL=$PATH/api",
+        ]
+    },
+```
+- follow firebase's initialization instructions to configure the app with proper settings (some files are gitignored because they have api keys) [link](https://firebase.google.com/docs/flutter/setup)
+- run the app
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
